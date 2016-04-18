@@ -4,7 +4,9 @@ and may not be redistributed without written permission.*/
 //The headers
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
+#include "SDL/SDL_mixer.h"
 #include <string>
+#include <iostream>
 
 //Screen attributes
 const int SCREEN_WIDTH = 960;
@@ -17,30 +19,33 @@ const int FRAMES_PER_SECOND = 10;
 //The dimenstions of the stick figure
 const int FOO_WIDTH = 84;
 const int FOO_HEIGHT = 80;
-const int JUMP_WIDTH = 96;
-const int JUMP_HEIGHT = 110;
+const int JUMP_WIDTH = 100;
+const int JUMP_HEIGHT = 108;
 int DEFAULT_Y = (SCREEN_HEIGHT - FOO_HEIGHT - 18);
+int jump = 0;
 
 //The direction status of the stick figure
 const int FOO_RIGHT = 0;
 const int FOO_LEFT = 1;
-const int FOO_JUMP_RIGHT = 0;
-const int FOO_JUMP_LEFT = 1;
+const int FOO_JUMP_RIGHT = 3;
+const int FOO_JUMP_LEFT = 4;
 
 //The surfaces
 SDL_Surface *foo = NULL;
-SDL_Surface *jump = NULL;
 SDL_Surface *background = NULL;
 SDL_Surface *screen = NULL;
+
+//The music
+Mix_Music *music = NULL;
 
 //The event structure
 SDL_Event event;
 
 //The areas of the sprite sheet
-SDL_Rect clipsRight[ 4 ];
-SDL_Rect clipsLeft[ 4 ];
-SDL_Rect clipsUpRight[ 4 ];
-SDL_Rect clipsUpLeft[ 4 ];
+SDL_Rect clipsRight[ 6 ];
+SDL_Rect clipsLeft[ 6 ];
+SDL_Rect clipsUpRight[ 5 ];
+SDL_Rect clipsUpLeft[ 5 ];
 
 //The stick figure
 class Foo
@@ -153,44 +158,54 @@ void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination,
 void set_clips()
 {
     clipsUpRight[ 0 ].x = 0;
-    clipsUpRight[ 0 ].y = 0;
+    clipsUpRight[ 0 ].y = FOO_HEIGHT * 2;
     clipsUpRight[ 0 ].w = JUMP_WIDTH;
     clipsUpRight[ 0 ].h = JUMP_HEIGHT;
 
     clipsUpRight[ 1 ].x = JUMP_WIDTH;
-    clipsUpRight[ 1 ].y = 0;
+    clipsUpRight[ 1 ].y = FOO_HEIGHT * 2;
     clipsUpRight[ 1 ].w = JUMP_WIDTH;
     clipsUpRight[ 1 ].h = JUMP_HEIGHT;
 
     clipsUpRight[ 2 ].x = JUMP_WIDTH * 2;
-    clipsUpRight[ 2 ].y = 0;
+    clipsUpRight[ 2 ].y = FOO_HEIGHT * 2;
     clipsUpRight[ 2 ].w = JUMP_WIDTH;
     clipsUpRight[ 2 ].h = JUMP_HEIGHT;
 
     clipsUpRight[ 3 ].x = JUMP_WIDTH * 3;
-    clipsUpRight[ 3 ].y = 0;
+    clipsUpRight[ 3 ].y = FOO_HEIGHT * 2;
     clipsUpRight[ 3 ].w = JUMP_WIDTH;
     clipsUpRight[ 3 ].h = JUMP_HEIGHT;
 
+    clipsUpRight[ 4 ].x = JUMP_WIDTH * 4;
+    clipsUpRight[ 4 ].y = FOO_HEIGHT * 2;
+    clipsUpRight[ 4 ].w = JUMP_WIDTH;
+    clipsUpRight[ 4 ].h = JUMP_HEIGHT;
+
     clipsUpLeft[ 0 ].x = 0;
-    clipsUpLeft[ 0 ].y = JUMP_HEIGHT;
+    clipsUpLeft[ 0 ].y = (FOO_HEIGHT * 2) + JUMP_HEIGHT;
     clipsUpLeft[ 0 ].w = JUMP_WIDTH;
     clipsUpLeft[ 0 ].h = JUMP_HEIGHT;
 
     clipsUpLeft[ 1 ].x = JUMP_WIDTH;
-    clipsUpLeft[ 1 ].y = JUMP_HEIGHT;
+    clipsUpLeft[ 1 ].y = (FOO_HEIGHT * 2) + JUMP_HEIGHT;
     clipsUpLeft[ 1 ].w = JUMP_WIDTH;
     clipsUpLeft[ 1 ].h = JUMP_HEIGHT;
 
     clipsUpLeft[ 2 ].x = JUMP_WIDTH * 2;
-    clipsUpLeft[ 2 ].y = JUMP_HEIGHT;
+    clipsUpLeft[ 2 ].y = (FOO_HEIGHT * 2) + JUMP_HEIGHT;
     clipsUpLeft[ 2 ].w = JUMP_WIDTH;
     clipsUpLeft[ 2 ].h = JUMP_HEIGHT;
 
     clipsUpLeft[ 3 ].x = JUMP_WIDTH * 3;
-    clipsUpLeft[ 3 ].y = JUMP_HEIGHT;
+    clipsUpLeft[ 3 ].y = (FOO_HEIGHT * 2) + JUMP_HEIGHT;
     clipsUpLeft[ 3 ].w = JUMP_WIDTH;
     clipsUpLeft[ 3 ].h = JUMP_HEIGHT;
+
+    clipsUpLeft[ 4 ].x = JUMP_WIDTH * 4;
+    clipsUpLeft[ 4 ].y = (FOO_HEIGHT * 2) + JUMP_HEIGHT;
+    clipsUpLeft[ 4 ].w = JUMP_WIDTH;
+    clipsUpLeft[ 4 ].h = JUMP_HEIGHT;
 
     //Clip the sprites
    
@@ -214,6 +229,16 @@ void set_clips()
     clipsRight[ 3 ].w = FOO_WIDTH;
     clipsRight[ 3 ].h = FOO_HEIGHT;
 
+    clipsRight[ 4 ].x = FOO_WIDTH * 4;
+    clipsRight[ 4 ].y = 0;
+    clipsRight[ 4 ].w = FOO_WIDTH;
+    clipsRight[ 4 ].h = FOO_HEIGHT;
+ 
+    clipsRight[ 5 ].x = FOO_WIDTH * 5;
+    clipsRight[ 5 ].y = 0;
+    clipsRight[ 5 ].w = FOO_WIDTH;
+    clipsRight[ 5 ].h = FOO_HEIGHT;
+
     clipsLeft[ 0 ].x = 0;
     clipsLeft[ 0 ].y = FOO_HEIGHT;
     clipsLeft[ 0 ].w = FOO_WIDTH;
@@ -233,6 +258,16 @@ void set_clips()
     clipsLeft[ 3 ].y = FOO_HEIGHT;
     clipsLeft[ 3 ].w = FOO_WIDTH;
     clipsLeft[ 3 ].h = FOO_HEIGHT;
+
+    clipsLeft[ 4 ].x = FOO_WIDTH * 4;
+    clipsLeft[ 4 ].y = FOO_HEIGHT;
+    clipsLeft[ 4 ].w = FOO_WIDTH;
+    clipsLeft[ 4 ].h = FOO_HEIGHT;
+
+    clipsLeft[ 5 ].x = FOO_WIDTH * 5;
+    clipsLeft[ 5 ].y = FOO_HEIGHT;
+    clipsLeft[ 5 ].w = FOO_WIDTH;
+    clipsLeft[ 5 ].h = FOO_HEIGHT;
 }
 
 bool init()
@@ -252,6 +287,12 @@ bool init()
         return false;
     }
 
+    //Initialize SDL_mixer
+    if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 4096 ) == -1 )
+    {
+        return false;    
+    }
+
     //Set the window caption
     SDL_WM_SetCaption( "Animation Test", NULL );
 
@@ -262,14 +303,8 @@ bool init()
 bool load_files()
 {
 
-    jump = load_image( "airman_jump.png" );
-
-    if (jump == NULL ){
-    	return false;
-    }
-
     //Load the sprite sheet
-    foo = load_image( "airman.png" );
+    foo = load_image( "Airman.png" );
 
     //If there was a problem in loading the sprite
     if( foo == NULL )
@@ -286,6 +321,15 @@ bool load_files()
         return false;
     }
 
+    //Load the music
+    music = Mix_LoadMUS( "af_song.wav" );
+    
+    //If there was a problem loading the music
+    if( music == NULL )
+    {
+        return false;    
+    }
+
     //If everything loaded fine
     return true;
 }
@@ -294,7 +338,15 @@ void clean_up()
 {
     //Free the surface
     SDL_FreeSurface( foo );
-    SDL_FreeSurface( jump );
+
+    //Free the background
+    SDL_FreeSurface( background );
+
+    //Free the music
+    Mix_FreeMusic( music );
+    
+    //Quit SDL_mixer
+    Mix_CloseAudio();
 
     //Quit SDL
     SDL_Quit();
@@ -324,7 +376,40 @@ void Foo::handle_events()
             case SDLK_LEFT: velocity -= FOO_WIDTH / 4; break;
 	    //case (SDLK_UP && SDLK_RIGHT): velocity += FOO_WIDTH / 4; DEFAULT_Y += 30; break;
 	    //case (SDLK_UP && SDLK_RIGHT): velocity -= FOO_WIDTH / 5; DEFAULT_Y += 30; break;
-	    case SDLK_UP: DEFAULT_Y -= 30; break;
+	    case SDLK_UP: jump = 1; break;
+	    case SDLK_9: 
+		 //If there is no music playing
+                 if( Mix_PlayingMusic() == 0 )
+                 {
+                     //Play the music
+                     if( Mix_PlayMusic( music, -1 ) == -1 )
+                     {
+                         //return 1;
+                     }    
+                 }
+		 else
+                 {
+                     //If the music is paused
+                     if( Mix_PausedMusic() == 1 )
+                     {
+                         //Resume the music
+                         Mix_ResumeMusic();
+                     }
+                     //If the music is playing
+                     else
+                     {
+                         //Pause the music
+                         Mix_PauseMusic();
+                     }
+                 }
+		 break;
+	   
+	   case SDLK_0:
+	   	
+	   	//stop the music
+		Mix_HaltMusic();
+		break;
+
         }
     }
     //If a key was released
@@ -337,7 +422,7 @@ void Foo::handle_events()
             case SDLK_LEFT: velocity += FOO_WIDTH / 4; break;
 	    //case (SDLK_UP && SDLK_RIGHT): velocity -= FOO_WIDTH / 4; DEFAULT_Y -= 30; break;
 	    //case (SDLK_UP && SDLK_RIGHT): velocity += FOO_WIDTH / 5; DEFAULT_Y -= 30; break;
-	    case SDLK_UP: DEFAULT_Y += 30; break;
+	    //case SDLK_UP: DEFAULT_Y += 30; break;
         }
     }
 }
@@ -360,36 +445,67 @@ void Foo::move()
 void Foo::show()
 {
     //If Foo is moving left
-    if( velocity < 0 )
+    if( jump == 0 && velocity < 0 )
     {
         //Set the animation to left
         status = FOO_LEFT;
+	DEFAULT_Y = (SCREEN_HEIGHT - FOO_HEIGHT - 18);
+	std::cout << "STATUS IS: " << status << std::endl;
 
         //Move to the next frame in the animation
         frame++;
     }
     //If Foo is moving right
-    else if( velocity > 0 )
+    else if( jump == 0 && velocity > 0 )
     {
-        //Set the animation to right
-        status = FOO_RIGHT;
+	//Set the animation to right
+	status = FOO_RIGHT;
+	DEFAULT_Y = (SCREEN_HEIGHT - FOO_HEIGHT - 18);
+	std::cout << "STATUS IS: " << status << std::endl;
 
-        //Move to the next frame in the animation
-        frame++;
+	//Move to the next frame in the animation
+	frame++;
     }
 
     //If Airman jumping right
-    else if(DEFAULT_Y > (SCREEN_HEIGHT - FOO_HEIGHT - 18) && velocity >= 0)
+    else if(jump == 1) //&& velocity >= 0)
     {
     	status = FOO_JUMP_RIGHT;
-	frame++;
+	std::cout << "STATUS IS: " << status << std::endl;
+	//frame = 0;
+	if (frame <= 2){
+		DEFAULT_Y -= 30;
+		frame ++;
+	}
+		
+	else if (frame > 2 && frame < 4){
+		DEFAULT_Y += 40;
+		frame ++;
+	}
+
+	else if (frame >= 4){
+		DEFAULT_Y += 50;
+		frame = 0;
+		jump = 0;
+		DEFAULT_Y = (SCREEN_HEIGHT - FOO_HEIGHT - 18);
+	}
     }
 
-    //If Airman jumping right
-    else if(DEFAULT_Y > (SCREEN_HEIGHT - FOO_HEIGHT - 18) && velocity < 0)
+    //If Airman jumping left
+    else if(jump == 1 && velocity < 0)
     {
     	status = FOO_JUMP_LEFT;
-	frame++;
+	std::cout << "STATUS IS: " << status << std::endl;
+	DEFAULT_Y -= 30;
+	//frame = 0;
+	if (frame >= 4){
+		DEFAULT_Y = (SCREEN_HEIGHT - FOO_HEIGHT - 18);
+		frame = 0;
+		jump = 0;
+	}
+	else{
+		frame++;
+	}
     }
 
 
@@ -401,7 +517,7 @@ void Foo::show()
     }
 
     //Loop the animation
-    if( frame >= 4 )
+    if( frame >= 5 )
     {
         frame = 0;
     }
@@ -417,11 +533,11 @@ void Foo::show()
     }
     else if (status == FOO_JUMP_RIGHT )
     {
-    	apply_surface (offSet, DEFAULT_Y, jump, screen, &clipsUpRight[ frame ] );
+    	apply_surface (offSet, DEFAULT_Y, foo, screen, &clipsUpRight[ frame ] );
     }
     else if (status == FOO_JUMP_LEFT )
     {
-    	apply_surface (offSet, DEFAULT_Y, jump, screen, &clipsUpLeft[ frame ] );
+    	apply_surface (offSet, DEFAULT_Y, foo, screen, &clipsUpLeft[ frame ] );
     }
 
 }
@@ -603,4 +719,3 @@ int main( int argc, char* args[] )
 
     return 0;
 }
-
