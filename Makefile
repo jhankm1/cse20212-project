@@ -9,7 +9,7 @@ CC = g++
 COMPILER_FLAGS = -w
 
 #LINKER_FLAGS specifies the libraries we're linking against
-LINKER_FLAGS = -lSDL -lSDL_image
+LINKER_FLAGS = -lSDL -lSDL_image -lSDL_mixer
 
 #OBJ_NAME specifies the name of our exectuable
 OBJ_NAME = test
@@ -20,6 +20,5 @@ all : $(OBJS)
 
 clean : 
 	rm $(OBJ_NAME) 
-
 
 
