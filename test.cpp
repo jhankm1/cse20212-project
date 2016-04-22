@@ -322,7 +322,7 @@ bool load_files()
     }
 
     //Load the music
-    music = Mix_LoadMUS( "af_song.wav" );
+    music = Mix_LoadMUS( "new_af_song.wav" );
     
     //If there was a problem loading the music
     if( music == NULL )
