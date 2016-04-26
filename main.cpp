@@ -1,12 +1,9 @@
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 #include "SDL/SDL_mixer.h"
-#include "test.h"
 #include <string>
 #include <iostream>
-
-using namespace std;
-
+#include "game.h"
 
 SDL_Surface *load_image( std::string filename )
 {
@@ -42,7 +39,115 @@ SDL_Surface *load_image( std::string filename )
 }
 
 
+bool init()
+{
+    //Initialize all SDL subsystems
+    if( SDL_Init( SDL_INIT_EVERYTHING ) == -1 )
+    {
+        return false;
+    }
 
+    //Set up the screen
+    screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE );
+
+    //If there was an error in setting up the screen
+    if( screen == NULL )
+    {
+        return false;
+    }
+
+    //Initialize SDL_mixer
+    if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 4096 ) == -1 )
+    {
+        return false;    
+    }
+
+    //Set the window caption
+    SDL_WM_SetCaption( "Animation Test", NULL );
+
+    //If everything initialized fine
+    return true;
+}
+
+bool load_files()
+{
+
+    //Load the sprite sheet
+    foo = load_image( "Airman.png" );
+
+    //If there was a problem in loading the sprite
+    if( foo == NULL )
+    {
+        return false;
+    }
+
+
+    //Load the sprite sheet
+    enemy = load_image( "enemy.png" );
+
+    //If there was a problem in loading the sprite
+    if( enemy == NULL )
+    {
+        return false;
+    }    
+
+    //Load the background
+    background = load_image( "city_background.bmp" );
+
+    //If there was a problem in loading the background
+    if( background == NULL )
+    {
+        return false;
+    }
+
+    // load obstacles
+
+    obstacle = load_image( "obstacles.png");
+
+    //problem loading them
+
+    if( obstacle == NULL ){
+    	return false;
+
+    }
+
+    //Load the music
+    music = Mix_LoadMUS( "new_af_song.wav" );
+    
+    //If there was a problem loading the music
+    if( music == NULL )
+    {
+        return false;    
+    }
+
+    //If everything loaded fine
+    return true;
+}
+
+
+void clean_up()
+{
+    //Free the surface
+    SDL_FreeSurface( foo );
+
+    //Free the surface
+    SDL_FreeSurface( enemy );
+
+    //Free the background
+    SDL_FreeSurface( background );
+
+    // Free obstacle background
+    SDL_FreeSurface( obstacle );
+
+    //Free the music
+    Mix_FreeMusic( music );
+    
+    //Quit SDL_mixer
+    Mix_CloseAudio();
+
+    //Quit SDL
+    SDL_Quit();
+}
 
 void set_clips()
 {
@@ -148,7 +253,6 @@ void set_clips()
     clipsLeft[ 3 ].w = FOO_WIDTH;
     clipsLeft[ 3 ].h = FOO_HEIGHT;
 
-
     clipsLeft[ 4 ].x = FOO_WIDTH * 4;
     clipsLeft[ 4 ].y = FOO_HEIGHT;
     clipsLeft[ 4 ].w = FOO_WIDTH;
@@ -160,112 +264,13 @@ void set_clips()
     clipsLeft[ 5 ].h = FOO_HEIGHT;
 }
 
-bool init()
-{
-    //Initialize all SDL subsystems
-    if( SDL_Init( SDL_INIT_EVERYTHING ) == -1 )
-    {
-        return false;
-    }
-
-    //Set up the screen
-    screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE );
-
-    //If there was an error in setting up the screen
-    if( screen == NULL )
-    {
-        return false;
-    }
-
-    //Initialize SDL_mixer
-    if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 4096 ) == -1 )
-    {
-        return false;    
-    }
-
-    //Set the window caption
-    SDL_WM_SetCaption( "Animation Test", NULL );
-
-    //If everything initialized fine
-    return true;
-}
-
-
-
-bool load_files()
-{
-
-    //Load the sprite sheetclea
-    foo = load_image( "Airman.png" );
-
-    //If there was a problem in loading the sprite
-    if( foo == NULL )
-    {
-        return false;
-    }
-
-    // load enemy
-    enemy = load_image("enemy.png");
-
-	if ( enemy == NULL)
-	{
-		return false;
-
-	}
-
-    //Load the background
-    background = load_image( "city_background.bmp" );
-
-    //If there was a problem in loading the background
-    if( background == NULL )
-    {
-        return false;
-    }
-
-    //Load the music
-    music = Mix_LoadMUS( "new_af_song.wav" );
-    
-    //If there was a problem loading the music
-    if( music == NULL )
-    {
-        return false;    
-    }
-
-    //If everything loaded fine
-    return true;
-}
-
-
-
-void clean_up()
-{
-    //Free the surface
-    SDL_FreeSurface( foo );
-
-    // free enemy
-
-	SDL_FreeSurface( enemy);
-
-    //Free the background
-    SDL_FreeSurface( background );
-
-    //Free the music
-    Mix_FreeMusic( music );
-    
-    //Quit SDL_mixer
-    Mix_CloseAudio();
-
-    //Quit SDL
-    SDL_Quit();
-}
-
-
-
 int main( int argc, char* args[] )
 {
 
 	int bgx = 0;
 	int bgy = 0;
+	int bgx2 = 0;
+	int bgy2 = 0;
 
     //Quit flag
     bool quit = false;
@@ -310,27 +315,28 @@ int main( int argc, char* args[] )
                 quit = true;
             }
         }
-
 	bgx -= 5;
-	//bgx -= 3;
-	//bgx2 -=5;
+	bgx2 -=5;
+
 	if (bgx <= -background->w){
 		bgx = 0;
 	}
-	// if (bgx2 <= -background2->w){
-		//bgx2 = 0;
-	//}
+	if (bgx2 <= -obstacle->w){
+		bgx2 = 0;
+	}
 
 
 	apply_surface(bgx, bgy, background, screen, NULL);
 	apply_surface(bgx+background->w, bgy, background, screen, NULL);
-	//apply.....
+	apply_surface(bgx2, bgy2, obstacle, screen, NULL);
+	apply_surface(bgx2+obstacle->w, bgy, obstacle, screen, NULL);
 	apply_surface ( 450, 525, enemy, screen, NULL);	
+	
 
         //Move the stick figure
         walk.move();
 
-	
+
         //Show the stick figure on the screen
         walk.show();
 
@@ -352,3 +358,5 @@ int main( int argc, char* args[] )
 
     return 0;
 }
+
+
