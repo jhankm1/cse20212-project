@@ -16,14 +16,18 @@ const int SCREEN_BPP = 32;
 
 //The frames per second
 const int FRAMES_PER_SECOND = 10;
+int going_right = 0;
+int going_left = 0;
 
 //The dimenstions of the stick figure
-const int FOO_WIDTH = 84;
-const int FOO_HEIGHT = 80;
-const int JUMP_WIDTH = 100;
-const int JUMP_HEIGHT = 108;
-int DEFAULT_Y = (SCREEN_HEIGHT - FOO_HEIGHT - 18);
+const int FOO_WIDTH = 120;
+const int FOO_HEIGHT = 150;
+const int JUMP_WIDTH = 120;
+const int JUMP_HEIGHT = 150;
+int DEFAULT_Y = (SCREEN_HEIGHT - FOO_HEIGHT + 10);
 int jump = 0;
+
+
 
 //The direction status of the stick figure
 const int FOO_RIGHT = 0;
@@ -31,10 +35,21 @@ const int FOO_LEFT = 1;
 const int FOO_JUMP_RIGHT = 3;
 const int FOO_JUMP_LEFT = 4;
 
+
+// obstacle dimensions
+int OBST_WIDTH;
+int OBST_HEIGHT;
+int OBST_XCOORD;
+int OBST_YCOORD;
+
 //The surfaces
 SDL_Surface *foo = NULL;
 SDL_Surface *background = NULL;
+SDL_Surface *obstacle = NULL;
 SDL_Surface *screen = NULL;
+SDL_Surface *enemy = NULL;
+SDL_Surface *boss = NULL;
+
 
 //The music
 Mix_Music *music = NULL;
@@ -47,6 +62,26 @@ SDL_Rect clipsRight[ 6 ];
 SDL_Rect clipsLeft[ 6 ];
 SDL_Rect clipsUpRight[ 5 ];
 SDL_Rect clipsUpLeft[ 5 ];
+SDL_Rect fooRect = {0, DEFAULT_Y, FOO_WIDTH, FOO_HEIGHT};
+SDL_Rect enemyRect = { 450, 525, 50, 50};
+
+// create obstacle rectangle objects for collision
+
+SDL_Rect obstacleRect1 = {765, 497, 44, 93 };
+SDL_Rect obstacleRect2 = {1194, 542, 26, 53 };
+SDL_Rect obstacleRect3 = {1253, 512, 31, 25 };
+SDL_Rect obstacleRect4 = {1289, 490, 63, 27 };
+SDL_Rect obstacleRect5 = {1361, 519, 39, 40 };
+SDL_Rect obstacleRect6 = {1405, 544, 43, 25 };
+SDL_Rect obstacleRect7 = {1690, 518, 69, 31 };
+SDL_Rect obstacleRect8 = {2145, 540, 95, 36 };
+SDL_Rect obstacleRect9 = {2246, 514, 38, 23 };
+SDL_Rect obstacleRect10 = {2295, 484, 75, 28 };
+SDL_Rect obstacleRect11 = {3199, 538, 23, 30 };
+SDL_Rect obstacleRect12 = {3248, 538, 104, 30 };
+SDL_Rect obstacleRect13 = {3389, 538, 84, 30 };
+SDL_Rect obstacleRect14 = {3498, 538, 56, 30 };
+
 
 Foo::Foo()
 {
@@ -59,6 +94,7 @@ Foo::Foo()
     status = FOO_RIGHT;
 }
 
+
 void Foo::handle_events()
 {
 
@@ -68,10 +104,8 @@ void Foo::handle_events()
         //Set the velocity
         switch( event.key.keysym.sym )
         {
-            case SDLK_RIGHT: velocity += FOO_WIDTH / 3; break;
-            case SDLK_LEFT: velocity -= FOO_WIDTH / 4; break;
-	    //case (SDLK_UP && SDLK_RIGHT): velocity += FOO_WIDTH / 4; DEFAULT_Y += 30; break;
-	    //case (SDLK_UP && SDLK_RIGHT): velocity -= FOO_WIDTH / 5; DEFAULT_Y += 30; break;
+            case SDLK_RIGHT: velocity += FOO_WIDTH / 3; going_right = 1; break;
+            case SDLK_LEFT: velocity -= FOO_WIDTH / 4;  going_left = 1; break;
 	    case SDLK_UP: jump = 1; break;
 	    case SDLK_9: 
 		 //If there is no music playing
@@ -114,31 +148,47 @@ void Foo::handle_events()
         //Set the velocity
         switch( event.key.keysym.sym )
         {
-            case SDLK_RIGHT: velocity -= FOO_WIDTH / 3; break;
-            case SDLK_LEFT: velocity += FOO_WIDTH / 4; break;
-	    //case (SDLK_UP && SDLK_RIGHT): velocity -= FOO_WIDTH / 4; DEFAULT_Y -= 30; break;
-	    //case (SDLK_UP && SDLK_RIGHT): velocity += FOO_WIDTH / 5; DEFAULT_Y -= 30; break;
-	    //case SDLK_UP: DEFAULT_Y += 30; break;
+            case 
+		SDLK_RIGHT: velocity -= FOO_WIDTH / 3; going_right = 0;
+	    break;
+            case 
+		SDLK_LEFT: velocity += FOO_WIDTH / 4; going_left = 0;
+	    break;
+
         }
     }
 }
 
 void Foo::move()
 {
+
+
+
     if (jump != 1){
 
-    	//Move
-    	offSet += velocity;
+	if (collision(fooRect, enemyRect) != true){
+    		offSet += velocity;
+		fooRect.x += velocity;
+	}
 
     	//Keep the stick figure in bounds
 	if( ( offSet < 0 ) || ( offSet + FOO_WIDTH > SCREEN_WIDTH ) )
         {
-	    offSet -= velocity;
+	   if (collision(fooRect, enemyRect) != true){
+	  	offSet -= velocity;
+	    	fooRect.x -= velocity;
+	}
         }
         else{
-            offSet -= 5;
+	if (collision(fooRect, enemyRect) != true){
+           offSet -= 5;
+	   fooRect.x -= 5;
+	}
 	}
     }
+
+	
+
 }
 
 void Foo::show()
@@ -149,7 +199,7 @@ void Foo::show()
 	    {
 		//Set the animation to left
 		status = FOO_LEFT;
-		DEFAULT_Y = (SCREEN_HEIGHT - FOO_HEIGHT - 18);
+		DEFAULT_Y = (SCREEN_HEIGHT - FOO_HEIGHT + 10);
 		std::cout << "STATUS IS: " << status << std::endl;
 
 		//Move to the next frame in the animation
@@ -160,7 +210,7 @@ void Foo::show()
 	    {
 		//Set the animation to right
 		status = FOO_RIGHT;
-		DEFAULT_Y = (SCREEN_HEIGHT - FOO_HEIGHT - 18);
+		DEFAULT_Y = (SCREEN_HEIGHT - FOO_HEIGHT +10);
 		std::cout << "STATUS IS: " << status << std::endl;
 
 		//Move to the next frame in the animation
@@ -174,6 +224,10 @@ void Foo::show()
     	status = FOO_JUMP_RIGHT;
 	std::cout << "STATUS IS: " << status << std::endl;
 	//frame = 0;
+	if(going_right == 1){
+		offSet += velocity;
+		fooRect.x += velocity;
+	}
 	if (frame < 4){
 		if (frame <= 2){
 			DEFAULT_Y -= 30;
@@ -189,7 +243,7 @@ void Foo::show()
 		DEFAULT_Y += 50;
 		frame = 0;
 		jump = 0;
-		DEFAULT_Y = (SCREEN_HEIGHT - FOO_HEIGHT - 18);
+		DEFAULT_Y = (SCREEN_HEIGHT - FOO_HEIGHT + 10);
 	}
 		
     }
@@ -197,12 +251,14 @@ void Foo::show()
     //If Airman jumping left
     else if(jump == 1 && velocity < 0)
     {
+	if(going_left == 1){
+	}
     	status = FOO_JUMP_LEFT;
 	std::cout << "STATUS IS: " << status << std::endl;
 	DEFAULT_Y -= 30;
 	//frame = 0;
 	if (frame >= 4){
-		DEFAULT_Y = (SCREEN_HEIGHT - FOO_HEIGHT - 18);
+		DEFAULT_Y = (SCREEN_HEIGHT - FOO_HEIGHT + 10);
 		frame = 0;
 		jump = 0;
 	}
@@ -340,14 +396,10 @@ bool Timer::is_paused()
 {
     //Holds offsets
     SDL_Rect offset;
-
     //Get offsets
     offset.x = x;
     offset.y = y;
-
     //Blit
     SDL_BlitSurface( source, clip, destination, &offset );
 }*/
-
-
 

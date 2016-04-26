@@ -1,4 +1,3 @@
-//The headers
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 #include "SDL/SDL_mixer.h"
@@ -82,6 +81,23 @@ bool load_files()
         return false;
     }
 
+
+    //Load the sprite sheet
+    enemy = load_image( "enemy.png" );
+ 
+
+    //If there was a problem in loading the sprite
+    if( enemy == NULL )
+    {
+        return false;
+    }    
+
+     boss = load_image( "Boss.png");
+     if( boss == NULL ){
+    	return false;
+
+    }
+
     //Load the background
     background = load_image( "city_background.bmp" );
 
@@ -89,6 +105,17 @@ bool load_files()
     if( background == NULL )
     {
         return false;
+    }
+
+    // load obstacles
+
+    obstacle = load_image( "obstacles.png");
+
+    //problem loading them
+
+    if( obstacle == NULL ){
+    	return false;
+
     }
 
     //Load the music
@@ -110,8 +137,16 @@ void clean_up()
     //Free the surface
     SDL_FreeSurface( foo );
 
+    //Free the surface
+    SDL_FreeSurface( enemy );
+
     //Free the background
     SDL_FreeSurface( background );
+
+    // Free obstacle background
+    SDL_FreeSurface( obstacle );
+
+    SDL_FreeSurface( boss );
 
     //Free the music
     Mix_FreeMusic( music );
@@ -243,6 +278,8 @@ int main( int argc, char* args[] )
 
 	int bgx = 0;
 	int bgy = 0;
+	int bgx2 = 0;
+	int bgy2 = 0;
 
     //Quit flag
     bool quit = false;
@@ -287,16 +324,23 @@ int main( int argc, char* args[] )
                 quit = true;
             }
         }
-
 	bgx -= 5;
-	
+	bgx2 -=5;
+
 	if (bgx <= -background->w){
 		bgx = 0;
 	}
+	if (bgx2 <= -obstacle->w){
+		bgx2 = 0;
+	}
 
-	apply_surface(bgx, bgy, background, screen);
-	apply_surface(bgx+background->w, bgy, background, screen);
 
+	apply_surface(bgx, bgy, background, screen, NULL);
+	apply_surface(bgx+background->w, bgy, background, screen, NULL);
+	apply_surface(bgx2, bgy2, obstacle, screen, NULL);
+	apply_surface(bgx2+obstacle->w, bgy, obstacle, screen, NULL);
+	apply_surface ( 450, 525, enemy, screen, NULL);	
+        apply_surface ( 680, 300, boss, screen, NULL);	
 	
 
         //Move the stick figure

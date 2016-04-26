@@ -30,10 +30,19 @@ extern const int FOO_LEFT;
 extern const int FOO_JUMP_RIGHT;
 extern const int FOO_JUMP_LEFT;
 
+// dimensions of our obstacle
+extern int OBST_WIDTH;
+extern int OBST_HEIGHT;
+extern int OBST_XCOORD;
+extern int OBST_YCOORD;
+
 //The surfaces
 extern SDL_Surface *foo;
 extern SDL_Surface *background;
+extern SDL_Surface *obstacle;
 extern SDL_Surface *screen;
+extern SDL_Surface *enemy;
+extern SDL_Surface *boss;
 
 //The music
 extern Mix_Music *music;
@@ -46,9 +55,9 @@ extern SDL_Rect clipsRight[];
 extern SDL_Rect clipsLeft[];
 extern SDL_Rect clipsUpRight[];
 extern SDL_Rect clipsUpLeft[];
-
-
-//void apply_surface( int, int, SDL_Surface*, SDL_Surface*, SDL_Rect*);
+extern SDL_Rect fooRect;
+extern SDL_Rect enemyRect;
+extern SDL_Rect obstacleRect;
 
 //The stick figure
 class Foo
@@ -126,7 +135,46 @@ inline void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* desti
     SDL_BlitSurface( source, clip, destination, &offset );
 }
 
+inline bool collision( SDL_Rect A, SDL_Rect B ){
+    //The sides of the rectangles
+    int leftA, leftB;
+    int rightA, rightB;
+    int topA, topB;
+    int bottomA, bottomB;
+
+    //Calculate the sides of rect A
+    leftA = A.x;
+    rightA = A.x + A.w;
+    topA = A.y;
+    bottomA = A.y + A.h;
+        
+    //Calculate the sides of rect B
+    leftB = B.x;
+    rightB = B.x + B.w;
+    topB = B.y;
+    bottomB = B.y + B.h;
+
+
+    if ( (rightA >= leftB) && (rightB >= leftA)){
+	return true;
+    }
+
+    else if (( leftA <= rightB) && (leftB <= rightA)){
+        return true;
+    }
+
+    else if (( topA >= bottomB) && (topB >= bottomA)){
+	return true;
+    }
+
+    else if (( bottomA <= topB) && ( bottomB <= topA)){
+	return true;
+    }
+
+    
+}
 #endif
+
 
 
 
