@@ -17,18 +17,18 @@ extern const int SCREEN_BPP;
 extern const int FRAMES_PER_SECOND;
 
 //The dimenstions of the stick figure
-extern const int FOO_WIDTH;
-extern const int FOO_HEIGHT;
+extern const int AIRMAN_WIDTH;
+extern const int AIRMAN_HEIGHT;
 extern const int JUMP_WIDTH;
 extern const int JUMP_HEIGHT;
 extern int DEFAULT_Y;
 extern int jump;
 
 //The direction status of the stick figure
-extern const int FOO_RIGHT;
-extern const int FOO_LEFT;
-extern const int FOO_JUMP_RIGHT;
-extern const int FOO_JUMP_LEFT;
+extern const int AIRMAN_RIGHT;
+extern const int AIRMAN_LEFT;
+extern const int AIRMAN_JUMP_RIGHT;
+extern const int AIRMAN_JUMP_LEFT;
 
 // dimensions of our obstacle
 extern int OBST_WIDTH;
@@ -37,7 +37,7 @@ extern int OBST_XCOORD;
 extern int OBST_YCOORD;
 
 //The surfaces
-extern SDL_Surface *foo;
+extern SDL_Surface *airman;
 extern SDL_Surface *background;
 extern SDL_Surface *obstacle;
 extern SDL_Surface *screen;
@@ -55,7 +55,7 @@ extern SDL_Rect clipsRight[];
 extern SDL_Rect clipsLeft[];
 extern SDL_Rect clipsUpRight[];
 extern SDL_Rect clipsUpLeft[];
-extern SDL_Rect fooRect;
+extern SDL_Rect airmanRect;
 extern SDL_Rect enemyRect;
 extern SDL_Rect obstacleRect;
 extern SDL_Rect obstacleRect1;
@@ -74,7 +74,7 @@ extern SDL_Rect obstacleRect13;
 extern SDL_Rect obstacleRect14;
 
 //The stick figure
-class Foo
+class Airman
 {
     private:
     //The offset
@@ -93,7 +93,7 @@ class Foo
 
     public:
     //Initializes the variables
-    Foo();
+    Airman();
 
     //Handles input
     void handle_events();
