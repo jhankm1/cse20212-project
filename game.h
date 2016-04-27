@@ -44,6 +44,7 @@ extern SDL_Surface *screen;
 extern SDL_Surface *enemy;
 extern SDL_Surface *boss;
 extern SDL_Surface *bullet;
+extern SDL_Surface *gameover;
 
 //The music
 extern Mix_Music *music;

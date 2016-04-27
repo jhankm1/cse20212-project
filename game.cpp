@@ -47,6 +47,7 @@ SDL_Surface *screen = NULL;
 SDL_Surface *enemy = NULL;
 SDL_Surface *boss = NULL;
 SDL_Surface *bullet = NULL;
+SDL_Surface *gameover = NULL;
 
 
 // the music
@@ -162,17 +163,17 @@ void Airman::move()
 	// automatically apply velocity to aiman
 	airmanRect.x += velocity;
 	// check for collision
-	if (collision (airmanRect, enemyRect) != true){
+	//if (collision (airmanRect, enemyRect) != true){
 		offSet += velocity;
-	}
+	//}
 
 	// ensure character stays on screen
 	if( ( offSet < 0 ) || ( offSet + AIRMAN_WIDTH > SCREEN_WIDTH ) )
     	{
-		if (collision(airmanRect, enemyRect) != true){
+		//if (collision(airmanRect, enemyRect) != true){
         		offSet -= velocity;
 			airmanRect.x -= velocity; 
-		}   
+		//}   
 		// reset positioning if at end of screen
 		offSet = 0;
 		

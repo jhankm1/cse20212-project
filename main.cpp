@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include "game.h"
+#include <unistd.h>
 
 SDL_Surface *load_image( std::string filename )
 {
@@ -89,6 +90,13 @@ bool load_files()
 
     //Load the sprite sheet
     enemy = load_image( "enemy.png" );
+
+    // Load Gameover Screen
+    gameover = load_image( "GameOver.bmp");
+    if( gameover == NULL )
+       {
+           return false;
+       }    
  
 
     //If there was a problem in loading the sprite
@@ -144,6 +152,7 @@ void clean_up()
     //Free the surface
     SDL_FreeSurface( airman );
     SDL_FreeSurface ( bullet );
+    SDL_FreeSurface ( gameover );
 
     //Free the surface
     SDL_FreeSurface( enemy );
@@ -262,7 +271,7 @@ void set_clips()
     clipsLeft[ 5 ].h = AIRMAN_HEIGHT;
 }
 
-using namespace std;
+
 int main( int argc, char* args[] )
 {
 
@@ -337,8 +346,14 @@ int main( int argc, char* args[] )
 	bulletx -= 12;
 	bullety += 10;
 	if(bulletx + 50 >= player.getoffset() && bulletx + 50 <= player.getoffset() + AIRMAN_WIDTH && bullety >= player.getyoff() && bullety <= player.getyoff() + AIRMAN_HEIGHT){
-		cout << "GAME OVER" <<endl;
+		apply_surface(0, 0, gameover, screen, NULL);
+		if( SDL_Flip( screen ) == -1 )
+        	{
+            		return 1;
+      		}
+		sleep(5);
 		return 0;
+		
 	}
 
 	// reset the background (loop)
