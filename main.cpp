@@ -73,10 +73,10 @@ bool load_files()
 {
 
     //Load the sprite sheet
-    foo = load_image( "Airman.png" );
+    airman = load_image( "Airman.png" );
 
     //If there was a problem in loading the sprite
-    if( foo == NULL )
+    if( airman == NULL )
     {
         return false;
     }
@@ -137,7 +137,7 @@ bool load_files()
 void clean_up()
 {
     //Free the surface
-    SDL_FreeSurface( foo );
+    SDL_FreeSurface( airman );
 
     //Free the surface
     SDL_FreeSurface( enemy );
@@ -162,175 +162,153 @@ void clean_up()
 
 void set_clips()
 {
+    // clips for jumping
     clipsUpRight[ 0 ].x = 0;
-    clipsUpRight[ 0 ].y = FOO_HEIGHT * 2;
+    clipsUpRight[ 0 ].y = AIRMAN_HEIGHT * 2;
     clipsUpRight[ 0 ].w = JUMP_WIDTH;
     clipsUpRight[ 0 ].h = JUMP_HEIGHT;
 
     clipsUpRight[ 1 ].x = JUMP_WIDTH;
-    clipsUpRight[ 1 ].y = FOO_HEIGHT * 2;
+    clipsUpRight[ 1 ].y = AIRMAN_HEIGHT * 2;
     clipsUpRight[ 1 ].w = JUMP_WIDTH;
     clipsUpRight[ 1 ].h = JUMP_HEIGHT;
 
     clipsUpRight[ 2 ].x = JUMP_WIDTH * 2;
-    clipsUpRight[ 2 ].y = FOO_HEIGHT * 2;
+    clipsUpRight[ 2 ].y = AIRMAN_HEIGHT * 2;
     clipsUpRight[ 2 ].w = JUMP_WIDTH;
     clipsUpRight[ 2 ].h = JUMP_HEIGHT;
 
     clipsUpRight[ 3 ].x = JUMP_WIDTH * 3;
-    clipsUpRight[ 3 ].y = FOO_HEIGHT * 2;
+    clipsUpRight[ 3 ].y = AIRMAN_HEIGHT * 2;
     clipsUpRight[ 3 ].w = JUMP_WIDTH;
     clipsUpRight[ 3 ].h = JUMP_HEIGHT;
 
     clipsUpRight[ 4 ].x = JUMP_WIDTH * 4;
-    clipsUpRight[ 4 ].y = FOO_HEIGHT * 2;
+    clipsUpRight[ 4 ].y = AIRMAN_HEIGHT * 2;
     clipsUpRight[ 4 ].w = JUMP_WIDTH;
     clipsUpRight[ 4 ].h = JUMP_HEIGHT;
 
     clipsUpRight[ 5 ].x = JUMP_WIDTH * 5;
-    clipsUpRight[ 5 ].y = FOO_HEIGHT * 2;
+    clipsUpRight[ 5 ].y = AIRMAN_HEIGHT * 2;
     clipsUpRight[ 5 ].w = JUMP_WIDTH;
     clipsUpRight[ 5 ].h = JUMP_HEIGHT;
 
-    clipsUpLeft[ 0 ].x = 0;
-    clipsUpLeft[ 0 ].y = (FOO_HEIGHT * 2) + JUMP_HEIGHT;
-    clipsUpLeft[ 0 ].w = JUMP_WIDTH;
-    clipsUpLeft[ 0 ].h = JUMP_HEIGHT;
-
-    clipsUpLeft[ 1 ].x = JUMP_WIDTH;
-    clipsUpLeft[ 1 ].y = (FOO_HEIGHT * 2) + JUMP_HEIGHT;
-    clipsUpLeft[ 1 ].w = JUMP_WIDTH;
-    clipsUpLeft[ 1 ].h = JUMP_HEIGHT;
-
-    clipsUpLeft[ 2 ].x = JUMP_WIDTH * 2;
-    clipsUpLeft[ 2 ].y = (FOO_HEIGHT * 2) + JUMP_HEIGHT;
-    clipsUpLeft[ 2 ].w = JUMP_WIDTH;
-    clipsUpLeft[ 2 ].h = JUMP_HEIGHT;
-
-    clipsUpLeft[ 3 ].x = JUMP_WIDTH * 3;
-    clipsUpLeft[ 3 ].y = (FOO_HEIGHT * 2) + JUMP_HEIGHT;
-    clipsUpLeft[ 3 ].w = JUMP_WIDTH;
-    clipsUpLeft[ 3 ].h = JUMP_HEIGHT;
-
-    clipsUpLeft[ 4 ].x = JUMP_WIDTH * 4;
-    clipsUpLeft[ 4 ].y = (FOO_HEIGHT * 2) + JUMP_HEIGHT;
-    clipsUpLeft[ 4 ].w = JUMP_WIDTH;
-    clipsUpLeft[ 4 ].h = JUMP_HEIGHT;
-
-    //Clip the sprites
+    // clip running sprites
    
     clipsRight[ 0 ].x = 0;
     clipsRight[ 0 ].y = 0;
-    clipsRight[ 0 ].w = FOO_WIDTH;
-    clipsRight[ 0 ].h = FOO_HEIGHT;
+    clipsRight[ 0 ].w = AIRMAN_WIDTH;
+    clipsRight[ 0 ].h = AIRMAN_HEIGHT;
 
-    clipsRight[ 1 ].x = FOO_WIDTH;
+    clipsRight[ 1 ].x = AIRMAN_WIDTH;
     clipsRight[ 1 ].y = 0;
-    clipsRight[ 1 ].w = FOO_WIDTH;
-    clipsRight[ 1 ].h = FOO_HEIGHT;
+    clipsRight[ 1 ].w = AIRMAN_WIDTH;
+    clipsRight[ 1 ].h = AIRMAN_HEIGHT;
 
-    clipsRight[ 2 ].x = FOO_WIDTH * 2;
+    clipsRight[ 2 ].x = AIRMAN_WIDTH * 2;
     clipsRight[ 2 ].y = 0;
-    clipsRight[ 2 ].w = FOO_WIDTH;
-    clipsRight[ 2 ].h = FOO_HEIGHT;
+    clipsRight[ 2 ].w = AIRMAN_WIDTH;
+    clipsRight[ 2 ].h = AIRMAN_HEIGHT;
 
-    clipsRight[ 3 ].x = FOO_WIDTH * 3;
+    clipsRight[ 3 ].x = AIRMAN_WIDTH * 3;
     clipsRight[ 3 ].y = 0;
-    clipsRight[ 3 ].w = FOO_WIDTH;
-    clipsRight[ 3 ].h = FOO_HEIGHT;
+    clipsRight[ 3 ].w = AIRMAN_WIDTH;
+    clipsRight[ 3 ].h = AIRMAN_HEIGHT;
 
-    clipsRight[ 4 ].x = FOO_WIDTH * 4;
+    clipsRight[ 4 ].x = AIRMAN_WIDTH * 4;
     clipsRight[ 4 ].y = 0;
-    clipsRight[ 4 ].w = FOO_WIDTH;
-    clipsRight[ 4 ].h = FOO_HEIGHT;
+    clipsRight[ 4 ].w = AIRMAN_WIDTH;
+    clipsRight[ 4 ].h = AIRMAN_HEIGHT;
  
-    clipsRight[ 5 ].x = FOO_WIDTH * 5;
+    clipsRight[ 5 ].x = AIRMAN_WIDTH * 5;
     clipsRight[ 5 ].y = 0;
-    clipsRight[ 5 ].w = FOO_WIDTH;
-    clipsRight[ 5 ].h = FOO_HEIGHT;
+    clipsRight[ 5 ].w = AIRMAN_WIDTH;
+    clipsRight[ 5 ].h = AIRMAN_HEIGHT;
 
     clipsLeft[ 0 ].x = 0;
-    clipsLeft[ 0 ].y = FOO_HEIGHT;
-    clipsLeft[ 0 ].w = FOO_WIDTH;
-    clipsLeft[ 0 ].h = FOO_HEIGHT;
+    clipsLeft[ 0 ].y = AIRMAN_HEIGHT;
+    clipsLeft[ 0 ].w = AIRMAN_WIDTH;
+    clipsLeft[ 0 ].h = AIRMAN_HEIGHT;
 
-    clipsLeft[ 1 ].x = FOO_WIDTH;
-    clipsLeft[ 1 ].y = FOO_HEIGHT;
-    clipsLeft[ 1 ].w = FOO_WIDTH;
-    clipsLeft[ 1 ].h = FOO_HEIGHT;
+    clipsLeft[ 1 ].x = AIRMAN_WIDTH;
+    clipsLeft[ 1 ].y = AIRMAN_HEIGHT;
+    clipsLeft[ 1 ].w = AIRMAN_WIDTH;
+    clipsLeft[ 1 ].h = AIRMAN_HEIGHT;
 
-    clipsLeft[ 2 ].x = FOO_WIDTH * 2;
-    clipsLeft[ 2 ].y = FOO_HEIGHT;
-    clipsLeft[ 2 ].w = FOO_WIDTH;
-    clipsLeft[ 2 ].h = FOO_HEIGHT;
+    clipsLeft[ 2 ].x = AIRMAN_WIDTH * 2;
+    clipsLeft[ 2 ].y = AIRMAN_HEIGHT;
+    clipsLeft[ 2 ].w = AIRMAN_WIDTH;
+    clipsLeft[ 2 ].h = AIRMAN_HEIGHT;
 
-    clipsLeft[ 3 ].x = FOO_WIDTH * 3;
-    clipsLeft[ 3 ].y = FOO_HEIGHT;
-    clipsLeft[ 3 ].w = FOO_WIDTH;
-    clipsLeft[ 3 ].h = FOO_HEIGHT;
+    clipsLeft[ 3 ].x = AIRMAN_WIDTH * 3;
+    clipsLeft[ 3 ].y = AIRMAN_HEIGHT;
+    clipsLeft[ 3 ].w = AIRMAN_WIDTH;
+    clipsLeft[ 3 ].h = AIRMAN_HEIGHT;
 
-    clipsLeft[ 4 ].x = FOO_WIDTH * 4;
-    clipsLeft[ 4 ].y = FOO_HEIGHT;
-    clipsLeft[ 4 ].w = FOO_WIDTH;
-    clipsLeft[ 4 ].h = FOO_HEIGHT;
+    clipsLeft[ 4 ].x = AIRMAN_WIDTH * 4;
+    clipsLeft[ 4 ].y = AIRMAN_HEIGHT;
+    clipsLeft[ 4 ].w = AIRMAN_WIDTH;
+    clipsLeft[ 4 ].h = AIRMAN_HEIGHT;
 
-    clipsLeft[ 5 ].x = FOO_WIDTH * 5;
-    clipsLeft[ 5 ].y = FOO_HEIGHT;
-    clipsLeft[ 5 ].w = FOO_WIDTH;
-    clipsLeft[ 5 ].h = FOO_HEIGHT;
+    clipsLeft[ 5 ].x = AIRMAN_WIDTH * 5;
+    clipsLeft[ 5 ].y = AIRMAN_HEIGHT;
+    clipsLeft[ 5 ].w = AIRMAN_WIDTH;
+    clipsLeft[ 5 ].h = AIRMAN_HEIGHT;
 }
 
 int main( int argc, char* args[] )
 {
 
-	int bgx = 0;
-	int bgy = 0;
-	int bgx2 = 0;
-	int bgy2 = 0;
+    // background positioning variables
+    int bgx = 0;
+    int bgy = 0;
+    int bgx2 = 0;
+    int bgy2 = 0;
 
-    //Quit flag
+    // quit flag
     bool quit = false;
 
-    //Initialize
+    // initialize
     if( init() == false )
     {
         return 1;
     }
 
-    //Load the files
+    // load the files
     if( load_files() == false )
     {
         return 1;
     }
 
-    //Clip the sprite sheet
+    // clip the sprite sheet
     set_clips();
 
-    //The frame rate regulator
+    //frame rate regulator
     Timer fps;
 
-    //The stick figure
-    Foo walk;
+    // figure
+    Airman player;
 
-    //While the user hasn't quit
+    // while the user hasn't quit
     while( quit == false )
     {
-        //Start the frame timer
+        // start the frame timer
         fps.start();
 
-        //While there's events to handle
+        // while there's events to handle
         while( SDL_PollEvent( &event ) )
         {
-            //Handle events for the stick figure
-            walk.handle_events();
+            // handle events for the airman
+            player.handle_events();
 
-            //If the user has Xed out the window
+            // if the user has Xed out the window
             if( event.type == SDL_QUIT )
             {
-                //Quit the program
+                // quit the program
                 quit = true;
             }
         }
+	// scroll the background and the obstacles
 	bgx -= 5;
 	bgx2 -=5;
 	obstacleRect1.x -= 5;
@@ -348,6 +326,7 @@ int main( int argc, char* args[] )
 	obstacleRect13.x -= 5;
 	obstacleRect14.x -= 5;
 
+	// reset the background (loop)
 	if (bgx <= -background->w){
 		bgx = 0;
 	}
@@ -355,7 +334,7 @@ int main( int argc, char* args[] )
 		bgx2 = 0;
 	}
 
-
+	// apply all surfaces for background
 	apply_surface(bgx, bgy, background, screen, NULL);
 	apply_surface(bgx+background->w, bgy, background, screen, NULL);
 	apply_surface(bgx2, bgy2, obstacle, screen, NULL);
@@ -364,27 +343,27 @@ int main( int argc, char* args[] )
         apply_surface ( 680, 300, boss, screen, NULL);	
 	
 
-        //Move the stick figure
-        walk.move();
+        // move the airman
+        player.move();
 
 
-        //Show the stick figure on the screen
-        walk.show();
+        // show the airman on the screen
+        player.show();
 
-        //Update the screen
+        // update the screen
         if( SDL_Flip( screen ) == -1 )
         {
             return 1;
         }
 
-        //Cap the frame rate
+        // cap the frame rate
         if( fps.get_ticks() < 1000 / FRAMES_PER_SECOND )
         {
             SDL_Delay( ( 1000 / FRAMES_PER_SECOND ) - fps.get_ticks() );
         }
     }
 
-    //Clean up
+    // clean up the screen
     clean_up();
 
     return 0;
