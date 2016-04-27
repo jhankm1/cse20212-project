@@ -107,6 +107,8 @@ bool load_files()
         return false;
     }
 
+
+
     // load obstacles
 
     obstacle = load_image( "obstacles.png");
@@ -387,5 +389,4 @@ int main( int argc, char* args[] )
 
     return 0;
 }
-
 
