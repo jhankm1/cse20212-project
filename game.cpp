@@ -1,7 +1,6 @@
-/*This source code copyrighted by Lazy Foo' Productions (2004-2013)
-and may not be redistributed without written permission.*/
 
-//The headers
+
+// headers
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 #include "SDL/SDL_mixer.h"
@@ -9,31 +8,31 @@ and may not be redistributed without written permission.*/
 #include <iostream>
 #include "game.h"
 
-//Screen attributes
+// screen attributes
 const int SCREEN_WIDTH = 960;
 const int SCREEN_HEIGHT = 600;
 const int SCREEN_BPP = 32;
 
-//The frames per second
+// frames per second
 const int FRAMES_PER_SECOND = 10;
 int going_right = 0;
 int going_left = 0;
 
-//The dimenstions of the stick figure
-const int FOO_WIDTH = 120;
-const int FOO_HEIGHT = 150;
+// the dimenstions of the airman
+const int AIRMAN_WIDTH = 120;
+const int AIRMAN_HEIGHT = 150;
 const int JUMP_WIDTH = 120;
 const int JUMP_HEIGHT = 150;
-int DEFAULT_Y = (SCREEN_HEIGHT - FOO_HEIGHT + 10);
+int DEFAULT_Y = (SCREEN_HEIGHT - AIRMAN_HEIGHT + 10);
 int jump = 0;
 
 
 
-//The direction status of the stick figure
-const int FOO_RIGHT = 0;
-const int FOO_LEFT = 1;
-const int FOO_JUMP_RIGHT = 3;
-const int FOO_JUMP_LEFT = 4;
+// the direction status of the airman
+const int AIRMAN_RIGHT = 0;
+const int AIRMAN_LEFT = 1;
+const int AIRMAN_JUMP_RIGHT = 3;
+const int AIRMAN_JUMP_LEFT = 4;
 
 
 // obstacle dimensions
@@ -42,21 +41,18 @@ int OBST_HEIGHT;
 int OBST_XCOORD;
 int OBST_YCOORD;
 
-//The surfaces
-SDL_Surface *foo = NULL;
+// the surfaces
+SDL_Surface *airman = NULL;
 SDL_Surface *background = NULL;
 SDL_Surface *obstacle = NULL;
 SDL_Surface *screen = NULL;
 SDL_Surface *enemy = NULL;
 SDL_Surface *boss = NULL;
 
-//Get the keystates
-Uint8 *keystates = SDL_GetKeyState( NULL );
-
-//The music
+// the music
 Mix_Music *music = NULL;
 
-//The event structure
+// the event structure
 SDL_Event event;
 
 //The areas of the sprite sheet
@@ -64,7 +60,7 @@ SDL_Rect clipsRight[ 6 ];
 SDL_Rect clipsLeft[ 6 ];
 SDL_Rect clipsUpRight[ 5 ];
 SDL_Rect clipsUpLeft[ 5 ];
-SDL_Rect fooRect = {0, DEFAULT_Y, FOO_WIDTH, FOO_HEIGHT};
+SDL_Rect airmanRect = {0, DEFAULT_Y, AIRMAN_WIDTH, AIRMAN_HEIGHT};
 SDL_Rect enemyRect = { 450, 525, 50, 50};
 
 // create obstacle rectangle objects for collision
@@ -85,143 +81,160 @@ SDL_Rect obstacleRect13 = {3389, 538, 84, 30 };
 SDL_Rect obstacleRect14 = {3498, 538, 56, 30 };
 
 
-Foo::Foo()
+Airman::Airman()
 {
-    //Initialize movement variables
-    offSet = 50;
-    yoff = DEFAULT_Y;
-    velocity = 0;
-    yvel = 0;
+	// initialize movement variables
+	offSet = 50;
+	yoff = DEFAULT_Y;
+	velocity = 0;
+	yvel = 0;
 
-    //Initialize animation variables
-    frame = 0;
-    status = FOO_RIGHT;
+	// initialize animation variables
+	frame = 0;
+	status = AIRMAN_RIGHT;
 }
 
 // event handling function
-void Foo::handle_events()
+void Airman::handle_events()
 {
 
 		
     
-    //If a key was pressed
-    if( event.type == SDL_KEYDOWN )
-    {
-        //Set the velocity
-        switch( event.key.keysym.sym )
-        {
-	    case SDLK_UP: yvel += 50; break;
-            case SDLK_RIGHT:if (velocity < 15){velocity += 15;} break;
-            case SDLK_LEFT: if (velocity > -15){velocity -= 15;} break;
-	    case SDLK_9: 
-		 //If there is no music playing
-                 if( Mix_PlayingMusic() == 0 )
-                 {
-                     //Play the music
-                     if( Mix_PlayMusic( music, -1 ) == -1 )
-                     {
-                         //return 1;
-                     }    
-                 }
-		 else
-                 {
-                     //If the music is paused
-                     if( Mix_PausedMusic() == 1 )
-                     {
-                         //Resume the music
-                         Mix_ResumeMusic();
-                     }
-                     //If the music is playing
-                     else
-                     {
-                         //Pause the music
-                         Mix_PauseMusic();
-                     }
-                 }
-		 break;
+    // if a key was pressed
+	if( event.type == SDL_KEYDOWN )
+	{
+	    // set the velocity
+	    switch( event.key.keysym.sym )
+	    {
+		case SDLK_UP: yvel += 50; break;
+		case SDLK_RIGHT:if (velocity < 10){velocity += 10;} break;
+            	case SDLK_LEFT: if (velocity > -10){velocity -= 10;} break;
+	    	case SDLK_9: 
+			// if there is no music playing
+                	if( Mix_PlayingMusic() == 0 )
+               		{
+                     		// play the music
+                    		if( Mix_PlayMusic( music, -1 ) == -1 )
+                     		{
+                         	//return 1;
+                     		}    
+                 	}
+			else
+                	{
+                     	// if the music is paused
+                     		if( Mix_PausedMusic() == 1 )
+                     		{
+                         		// resume the music
+                         		Mix_ResumeMusic();
+                     		}
+                     		// if the music is playing
+                     		else
+                     		{
+                         		// pause the music
+                         		Mix_PauseMusic();
+                     		}
+                 	}
+		 	break;
 	   
-	   case SDLK_0:
+	   	case SDLK_0:
 	   	
-	   	//stop the music
-		Mix_HaltMusic();
-		break;
-        }
+	   		//stop the music
+			Mix_HaltMusic();
+			break;
+	}
 
     }
-    else if( event.type == SDL_KEYUP )
-    {
-        //Adjust the velocity
-        switch( event.key.keysym.sym )
-        {
-            case SDLK_UP: yvel -= 50; break;
-	}
-    }
+
+	// if key is released
+	else if( event.type == SDL_KEYUP )
+	{
+		// adjust the velocity
+		switch( event.key.keysym.sym )
+	        {
+	        	case SDLK_UP: yvel -= 50; break;
+		}
+        }
 }
 
-void Foo::move()
+// move function
+void Airman::move()
 {
-	fooRect.x += velocity;
-	if (collision (fooRect, enemyRect) != true){
+	// automatically apply velocity to aiman
+	airmanRect.x += velocity;
+	// check for collision
+	if (collision (airmanRect, enemyRect) != true){
 		offSet += velocity;
 	}
 
-	if( ( offSet < 0 ) || ( offSet + FOO_WIDTH > SCREEN_WIDTH ) )
+	// ensure character stays on screen
+	if( ( offSet < 0 ) || ( offSet + AIRMAN_WIDTH > SCREEN_WIDTH ) )
     	{
-		if (collision(fooRect, enemyRect) != true){
+		// reset positioning if at end of screen
+		offSet = 0;
+		if (collision(airmanRect, enemyRect) != true){
         		offSet -= velocity;
-			fooRect.x -= velocity; 
+			airmanRect.x -= velocity; 
 		}   
     	}
 	
 }
 
-void Foo::show()
+void Airman::show()
 {
-
+	// if airman is jumping
 	if (yvel > 0 ){
-		status = FOO_JUMP_RIGHT;
+		// set appropriate status
+		status = AIRMAN_JUMP_RIGHT;
+		// update offset and frame
 		yoff -= yvel;
 		frame++;
 	}
 	
+	// if airman is running right
 	else if ( velocity > 0 ){
-		status = FOO_RIGHT;
+		status = AIRMAN_RIGHT;
 		frame ++;
 	}
-
+	
+	// if airman is running left
 	else if ( velocity < 0){
-		status = FOO_LEFT;
+		status = AIRMAN_LEFT;
 		frame++;
 	}
 
+	// if airman is standing still
 	else{
 		frame = 0;
 		yoff = DEFAULT_Y;
+		offSet -= 5;
 	}
 
+	// loop animation
 	if (frame >= 5){
-		//status = FOO_RIGHT;
 		frame = 0;
 		yoff = DEFAULT_Y;
 	}
 
-	if (status == FOO_RIGHT){
-		apply_surface( offSet, yoff, foo, screen, &clipsRight[ frame ] );
+	// right surface applied
+	if (status == AIRMAN_RIGHT){
+		apply_surface( offSet, yoff, airman, screen, &clipsRight[ frame ] );
+	}
+	
+	// left surface applied
+	if (status == AIRMAN_LEFT){
+		apply_surface( offSet, yoff, airman, screen, &clipsLeft[ frame ] );
 	}
 
-	if (status == FOO_LEFT){
-		apply_surface( offSet, yoff, foo, screen, &clipsLeft[ frame ] );
-	}
-
-	if (status == FOO_JUMP_RIGHT){
-		apply_surface( offSet, yoff, foo, screen, &clipsUpRight[ frame ] );
+	// jump surface applied
+	if (status == AIRMAN_JUMP_RIGHT){
+		apply_surface( offSet, yoff, airman, screen, &clipsUpRight[ frame ] );
 	}
 	
 }
 
 Timer::Timer()
 {
-    //Initialize the variables
+    // initialize the variables
     startTicks = 0;
     pausedTicks = 0;
     paused = false;
@@ -230,73 +243,73 @@ Timer::Timer()
 
 void Timer::start()
 {
-    //Start the timer
+    // start the timer
     started = true;
 
-    //Unpause the timer
+    // unpause the timer
     paused = false;
 
-    //Get the current clock time
+    // get the current clock time
     startTicks = SDL_GetTicks();
 }
 
 void Timer::stop()
 {
-    //Stop the timer
+    // stop the timer
     started = false;
 
-    //Unpause the timer
+    // unpause the timer
     paused = false;
 }
 
 void Timer::pause()
 {
-    //If the timer is running and isn't already paused
+    // if the timer is running and isn't already paused
     if( ( started == true ) && ( paused == false ) )
     {
-        //Pause the timer
+        // pause the timer
         paused = true;
 
-        //Calculate the paused ticks
+        // calculate the paused ticks
         pausedTicks = SDL_GetTicks() - startTicks;
     }
 }
 
 void Timer::unpause()
 {
-    //If the timer is paused
+    // if the timer is paused
     if( paused == true )
     {
-        //Unpause the timer
+        // unpause the timer
         paused = false;
 
-        //Reset the starting ticks
+        // reset the starting ticks
         startTicks = SDL_GetTicks() - pausedTicks;
 
-        //Reset the paused ticks
+        // reset the paused ticks
         pausedTicks = 0;
     }
 }
 
 int Timer::get_ticks()
 {
-    //If the timer is running
+    // if the timer is running
     if( started == true )
     {
-        //If the timer is paused
+        // if the timer is paused
         if( paused == true )
         {
-            //Return the number of ticks when the timer was paused
+            // return the number of ticks when the timer was paused
             return pausedTicks;
         }
         else
         {
-            //Return the current time minus the start time
+            // return the current time minus the start time
             return SDL_GetTicks() - startTicks;
         }
     }
 
-    //If the timer isn't running
+    // if the timer isn't running
     return 0;
 }
 
@@ -310,13 +323,3 @@ bool Timer::is_paused()
     return paused;
 }
 
-/*void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect* clip = NULL )
-{
-    //Holds offsets
-    SDL_Rect offset;
-    //Get offsets
-    offset.x = x;
-    offset.y = y;
-    //Blit
-    SDL_BlitSurface( source, clip, destination, &offset );
-}*/
