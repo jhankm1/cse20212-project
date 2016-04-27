@@ -185,6 +185,11 @@ void set_clips()
     clipsUpRight[ 4 ].w = JUMP_WIDTH;
     clipsUpRight[ 4 ].h = JUMP_HEIGHT;
 
+    clipsUpRight[ 5 ].x = JUMP_WIDTH * 5;
+    clipsUpRight[ 5 ].y = FOO_HEIGHT * 2;
+    clipsUpRight[ 5 ].w = JUMP_WIDTH;
+    clipsUpRight[ 5 ].h = JUMP_HEIGHT;
+
     clipsUpLeft[ 0 ].x = 0;
     clipsUpLeft[ 0 ].y = (FOO_HEIGHT * 2) + JUMP_HEIGHT;
     clipsUpLeft[ 0 ].w = JUMP_WIDTH;

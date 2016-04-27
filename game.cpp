@@ -50,6 +50,8 @@ SDL_Surface *screen = NULL;
 SDL_Surface *enemy = NULL;
 SDL_Surface *boss = NULL;
 
+//Get the keystates
+Uint8 *keystates = SDL_GetKeyState( NULL );
 
 //The music
 Mix_Music *music = NULL;
@@ -98,15 +100,17 @@ Foo::Foo()
 void Foo::handle_events()
 {
 
+		
+    
     //If a key was pressed
     if( event.type == SDL_KEYDOWN )
     {
         //Set the velocity
         switch( event.key.keysym.sym )
         {
-            case SDLK_RIGHT: velocity += FOO_WIDTH / 3; going_right = 1; break;
-            case SDLK_LEFT: velocity -= FOO_WIDTH / 4;  going_left = 1; break;
-	    case SDLK_UP: jump = 1; break;
+	    case SDLK_UP: DEFAULT_Y -= 50; break;
+            //case SDLK_RIGHT: velocity += 10; break;
+            //case SDLK_LEFT: velocity -= 10; break;
 	    case SDLK_9: 
 		 //If there is no music playing
                  if( Mix_PlayingMusic() == 0 )
@@ -142,33 +146,22 @@ void Foo::handle_events()
 
         }
     }
-    //If a key was released
-   else if( event.type == SDL_KEYUP )
-    {
-        //Set the velocity
-        switch( event.key.keysym.sym )
-        {
-            case 
-		SDLK_RIGHT: velocity -= FOO_WIDTH / 3; going_right = 0;
-	    break;
-            case 
-		SDLK_LEFT: velocity += FOO_WIDTH / 4; going_left = 0;
-	    break;
-
-        }
-    }
 }
 
 void Foo::move()
 {
 
-
-
-    if (jump != 1){
-
+    
+    if(DEFAULT_Y > (SCREEN_HEIGHT - FOO_HEIGHT + 10))
+	//status = FOO_RIGHT;
+    	status = FOO_JUMP_RIGHT;
+	//DEFAULT_Y -= 25;
+    else
+    {
+	status = FOO_RIGHT;
+	fooRect.x += velocity;
 	if (collision(fooRect, enemyRect) != true){
     		offSet += velocity;
-		fooRect.x += velocity;
 	}
 
     	//Keep the stick figure in bounds
@@ -177,127 +170,47 @@ void Foo::move()
 	   if (collision(fooRect, enemyRect) != true){
 	  	offSet -= velocity;
 	    	fooRect.x -= velocity;
+	   }
 	}
-        }
-        else{
-	if (collision(fooRect, enemyRect) != true){
-           offSet -= 5;
-	   fooRect.x -= 5;
-	}
-	}
-    }
 
 	
+    }
 
 }
 
 void Foo::show()
 {
-    if (jump != 1){
-	    //If Foo is moving left
-	    if(velocity < 0 )
-	    {
-		//Set the animation to left
-		status = FOO_LEFT;
-		DEFAULT_Y = (SCREEN_HEIGHT - FOO_HEIGHT + 10);
-		std::cout << "STATUS IS: " << status << std::endl;
-
-		//Move to the next frame in the animation
-		frame++;
-	    }
-	    //If Foo is moving right
-	    else if(velocity > 0 )
-	    {
-		//Set the animation to right
-		status = FOO_RIGHT;
-		DEFAULT_Y = (SCREEN_HEIGHT - FOO_HEIGHT +10);
-		std::cout << "STATUS IS: " << status << std::endl;
-
-		//Move to the next frame in the animation
-		frame++;
-	    }
-    }
-
-    //If Airman jumping right
-    else if(jump == 1) //&& velocity >= 0)
-    {
-    	status = FOO_JUMP_RIGHT;
-	std::cout << "STATUS IS: " << status << std::endl;
-	//frame = 0;
-	if(going_right == 1){
-		offSet += velocity;
-		fooRect.x += velocity;
-	}
-	if (frame < 4){
-		if (frame <= 2){
-			DEFAULT_Y -= 30;
-			frame ++;
-		}
-		
-		else if (frame > 2 && frame < 4){
-			DEFAULT_Y += 40;
-			frame ++;
-		}
-	}
-	if (frame >= 4){
-		DEFAULT_Y += 50;
-		frame = 0;
-		jump = 0;
-		DEFAULT_Y = (SCREEN_HEIGHT - FOO_HEIGHT + 10);
-	}
-		
-    }
-
-    //If Airman jumping left
-    else if(jump == 1 && velocity < 0)
-    {
-	if(going_left == 1){
-	}
-    	status = FOO_JUMP_LEFT;
-	std::cout << "STATUS IS: " << status << std::endl;
-	DEFAULT_Y -= 30;
-	//frame = 0;
-	if (frame >= 4){
-		DEFAULT_Y = (SCREEN_HEIGHT - FOO_HEIGHT + 10);
-		frame = 0;
-		jump = 0;
-	}
-	else{
-		frame++;
-	}
-    }
 
 
-    //If Foo standing
-    else
-    {
-        //Restart the animation
-        frame = 0;
-    }
-
-    //Loop the animation
-    if( frame >= 5 )
-    {
-        frame = 0;
-    }
+    
 
     //Show the stick figure
     if( status == FOO_RIGHT )
     {
-        apply_surface( offSet, /*SCREEN_HEIGHT - FOO_HEIGHT - 18*/ DEFAULT_Y, foo, screen, &clipsRight[ frame ] );
+	 //Loop the animation
+	if( frame >= 5 )
+	{
+		frame = 0;
+      	}
+	apply_surface( offSet, DEFAULT_Y, foo, screen, &clipsRight[ frame ] );
+	frame++;
+	DEFAULT_Y = (SCREEN_HEIGHT - FOO_HEIGHT + 10);	
     }
-    else if( status == FOO_LEFT )
-    {
-        apply_surface( offSet, /*SCREEN_HEIGHT - FOO_HEIGHT - 18*/DEFAULT_Y, foo, screen, &clipsLeft[ frame ] );
-    }
+
     else if (status == FOO_JUMP_RIGHT )
     {
-    	apply_surface (offSet, DEFAULT_Y, foo, screen, &clipsUpRight[ frame ] );
+	if( frame >= 5 )
+	{
+		frame = 0;
+		DEFAULT_Y = (SCREEN_HEIGHT - FOO_HEIGHT + 10);
+		jump = 0;
+      	}
+	else {
+		apply_surface( offSet, DEFAULT_Y, foo, screen, &clipsUpRight[ frame ] );
+		frame++;
+	}
     }
-    else if (status == FOO_JUMP_LEFT )
-    {
-    	apply_surface (offSet, DEFAULT_Y, foo, screen, &clipsUpLeft[ frame ] );
-    }
+ 
 
 }
 
