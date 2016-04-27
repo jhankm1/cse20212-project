@@ -98,7 +98,7 @@ Foo::Foo()
     status = FOO_RIGHT;
 }
 
-
+// event handling function
 void Foo::handle_events()
 {
 
@@ -320,4 +320,3 @@ bool Timer::is_paused()
     //Blit
     SDL_BlitSurface( source, clip, destination, &offset );
 }*/
-
