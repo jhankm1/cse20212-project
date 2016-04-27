@@ -74,12 +74,17 @@ bool load_files()
 
     //Load the sprite sheet
     airman = load_image( "Airman.png" );
+    bullet = load_image( "bullet.png");
 
     //If there was a problem in loading the sprite
     if( airman == NULL )
     {
         return false;
     }
+    if(bullet == NULL)
+	{
+		return false;
+	}
 
 
     //Load the sprite sheet
@@ -138,6 +143,7 @@ void clean_up()
 {
     //Free the surface
     SDL_FreeSurface( airman );
+    SDL_FreeSurface ( bullet );
 
     //Free the surface
     SDL_FreeSurface( enemy );
@@ -256,6 +262,7 @@ void set_clips()
     clipsLeft[ 5 ].h = AIRMAN_HEIGHT;
 }
 
+using namespace std;
 int main( int argc, char* args[] )
 {
 
@@ -264,6 +271,8 @@ int main( int argc, char* args[] )
     int bgy = 0;
     int bgx2 = 0;
     int bgy2 = 0;
+    int bulletx = 680;
+    int bullety = 350;
 
     // quit flag
     bool quit = false;
@@ -325,13 +334,38 @@ int main( int argc, char* args[] )
 	obstacleRect12.x -= 5;
 	obstacleRect13.x -= 5;
 	obstacleRect14.x -= 5;
+	bulletx -= 12;
+	bullety += 10;
+	if(bulletx + 50 >= player.getoffset() && bulletx + 50 <= player.getoffset() + AIRMAN_WIDTH && bullety >= player.getyoff() && bullety <= player.getyoff() + AIRMAN_HEIGHT){
+		cout << "GAME OVER" <<endl;
+		return 0;
+	}
 
 	// reset the background (loop)
 	if (bgx <= -background->w){
 		bgx = 0;
 	}
+	if(bulletx <= 0 || bullety >= SCREEN_HEIGHT){
+		    bulletx = 680;
+   		    bullety = 350;
+	}
+		
 	if (bgx2 <= -obstacle->w){
 		bgx2 = 0;
+		SDL_Rect obstacleRect1 = {765, 497, 44, 93 };
+		SDL_Rect obstacleRect2 = {1194, 542, 26, 53 };
+		SDL_Rect obstacleRect3 = {1253, 512, 31, 25 };
+		SDL_Rect obstacleRect4 = {1289, 490, 63, 27 };
+		SDL_Rect obstacleRect5 = {1361, 519, 39, 40 };
+		SDL_Rect obstacleRect6 = {1405, 544, 43, 25 };
+		SDL_Rect obstacleRect7 = {1690, 518, 69, 31 };
+		SDL_Rect obstacleRect8 = {2145, 540, 95, 36 };
+		SDL_Rect obstacleRect9 = {2246, 514, 38, 23 };
+		SDL_Rect obstacleRect10 = {2295, 484, 75, 28 };
+		SDL_Rect obstacleRect11 = {3199, 538, 23, 30 };
+		SDL_Rect obstacleRect12 = {3248, 538, 104, 30 };
+		SDL_Rect obstacleRect13 = {3389, 538, 84, 30 };
+		SDL_Rect obstacleRect14 = {3498, 538, 56, 30 };
 	}
 
 	// apply all surfaces for background
@@ -341,6 +375,7 @@ int main( int argc, char* args[] )
 	apply_surface(bgx2+obstacle->w, bgy, obstacle, screen, NULL);
 	apply_surface ( 450, 525, enemy, screen, NULL);	
         apply_surface ( 680, 300, boss, screen, NULL);	
+        apply_surface( bulletx, bullety, bullet, screen, NULL);
 	
 
         // move the airman
@@ -368,4 +403,3 @@ int main( int argc, char* args[] )
 
     return 0;
 }
-

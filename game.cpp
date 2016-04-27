@@ -1,5 +1,3 @@
-
-
 // headers
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
@@ -48,6 +46,8 @@ SDL_Surface *obstacle = NULL;
 SDL_Surface *screen = NULL;
 SDL_Surface *enemy = NULL;
 SDL_Surface *boss = NULL;
+SDL_Surface *bullet = NULL;
+
 
 // the music
 Mix_Music *music = NULL;
@@ -169,12 +169,13 @@ void Airman::move()
 	// ensure character stays on screen
 	if( ( offSet < 0 ) || ( offSet + AIRMAN_WIDTH > SCREEN_WIDTH ) )
     	{
-		// reset positioning if at end of screen
-		offSet = 0;
 		if (collision(airmanRect, enemyRect) != true){
         		offSet -= velocity;
 			airmanRect.x -= velocity; 
 		}   
+		// reset positioning if at end of screen
+		offSet = 0;
+		
     	}
 	
 }
@@ -322,4 +323,3 @@ bool Timer::is_paused()
 {
     return paused;
 }
-

@@ -43,6 +43,7 @@ extern SDL_Surface *obstacle;
 extern SDL_Surface *screen;
 extern SDL_Surface *enemy;
 extern SDL_Surface *boss;
+extern SDL_Surface *bullet;
 
 //The music
 extern Mix_Music *music;
@@ -103,6 +104,9 @@ class Airman
 
     //Shows the stick figure
     void show();
+
+    int getoffset(){ return offSet;};
+    int getyoff(){ return yoff;};
 };
 
 //The timer
@@ -190,7 +194,4 @@ inline bool collision( SDL_Rect A, SDL_Rect B ){
     
 }
 #endif
-
-
-
 
