@@ -58,6 +58,20 @@ extern SDL_Rect clipsUpLeft[];
 extern SDL_Rect fooRect;
 extern SDL_Rect enemyRect;
 extern SDL_Rect obstacleRect;
+extern SDL_Rect obstacleRect1;
+extern SDL_Rect obstacleRect2;
+extern SDL_Rect obstacleRect3;
+extern SDL_Rect obstacleRect4;
+extern SDL_Rect obstacleRect5;
+extern SDL_Rect obstacleRect6;
+extern SDL_Rect obstacleRect7;
+extern SDL_Rect obstacleRect8;
+extern SDL_Rect obstacleRect9;
+extern SDL_Rect obstacleRect10;
+extern SDL_Rect obstacleRect11;
+extern SDL_Rect obstacleRect12;
+extern SDL_Rect obstacleRect13;
+extern SDL_Rect obstacleRect14;
 
 //The stick figure
 class Foo
@@ -65,9 +79,11 @@ class Foo
     private:
     //The offset
     int offSet;
+    int yoff;
 
     //Its rate of movement
     int velocity;
+    int yvel;
 
     //Its current frame
     int frame;

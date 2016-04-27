@@ -331,6 +331,20 @@ int main( int argc, char* args[] )
         }
 	bgx -= 5;
 	bgx2 -=5;
+	obstacleRect1.x -= 5;
+	obstacleRect2.x -= 5;
+	obstacleRect3.x -= 5;
+	obstacleRect4.x -= 5;
+	obstacleRect5.x -= 5;
+	obstacleRect6.x -= 5;
+	obstacleRect7.x -= 5;
+	obstacleRect8.x -= 5;
+	obstacleRect9.x -= 5;
+	obstacleRect10.x -= 5;
+	obstacleRect11.x -= 5;
+	obstacleRect12.x -= 5;
+	obstacleRect13.x -= 5;
+	obstacleRect14.x -= 5;
 
 	if (bgx <= -background->w){
 		bgx = 0;

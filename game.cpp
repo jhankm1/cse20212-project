@@ -88,8 +88,10 @@ SDL_Rect obstacleRect14 = {3498, 538, 56, 30 };
 Foo::Foo()
 {
     //Initialize movement variables
-    offSet = 0;
+    offSet = 50;
+    yoff = DEFAULT_Y;
     velocity = 0;
+    yvel = 0;
 
     //Initialize animation variables
     frame = 0;
@@ -108,9 +110,9 @@ void Foo::handle_events()
         //Set the velocity
         switch( event.key.keysym.sym )
         {
-	    case SDLK_UP: DEFAULT_Y -= 50; break;
-            //case SDLK_RIGHT: velocity += 10; break;
-            //case SDLK_LEFT: velocity -= 10; break;
+	    case SDLK_UP: yvel += 50; break;
+            case SDLK_RIGHT:if (velocity < 15){velocity += 15;} break;
+            case SDLK_LEFT: if (velocity > -15){velocity -= 15;} break;
 	    case SDLK_9: 
 		 //If there is no music playing
                  if( Mix_PlayingMusic() == 0 )
@@ -143,75 +145,78 @@ void Foo::handle_events()
 	   	//stop the music
 		Mix_HaltMusic();
 		break;
-
         }
+
+    }
+    else if( event.type == SDL_KEYUP )
+    {
+        //Adjust the velocity
+        switch( event.key.keysym.sym )
+        {
+            case SDLK_UP: yvel -= 50; break;
+	}
     }
 }
 
 void Foo::move()
 {
-
-    
-    if(DEFAULT_Y > (SCREEN_HEIGHT - FOO_HEIGHT + 10))
-	//status = FOO_RIGHT;
-    	status = FOO_JUMP_RIGHT;
-	//DEFAULT_Y -= 25;
-    else
-    {
-	status = FOO_RIGHT;
 	fooRect.x += velocity;
-	if (collision(fooRect, enemyRect) != true){
-    		offSet += velocity;
+	if (collision (fooRect, enemyRect) != true){
+		offSet += velocity;
 	}
 
-    	//Keep the stick figure in bounds
 	if( ( offSet < 0 ) || ( offSet + FOO_WIDTH > SCREEN_WIDTH ) )
-        {
-	   if (collision(fooRect, enemyRect) != true){
-	  	offSet -= velocity;
-	    	fooRect.x -= velocity;
-	   }
-	}
-
+    	{
+		if (collision(fooRect, enemyRect) != true){
+        		offSet -= velocity;
+			fooRect.x -= velocity; 
+		}   
+    	}
 	
-    }
-
 }
 
 void Foo::show()
 {
 
-
-    
-
-    //Show the stick figure
-    if( status == FOO_RIGHT )
-    {
-	 //Loop the animation
-	if( frame >= 5 )
-	{
-		frame = 0;
-      	}
-	apply_surface( offSet, DEFAULT_Y, foo, screen, &clipsRight[ frame ] );
-	frame++;
-	DEFAULT_Y = (SCREEN_HEIGHT - FOO_HEIGHT + 10);	
-    }
-
-    else if (status == FOO_JUMP_RIGHT )
-    {
-	if( frame >= 5 )
-	{
-		frame = 0;
-		DEFAULT_Y = (SCREEN_HEIGHT - FOO_HEIGHT + 10);
-		jump = 0;
-      	}
-	else {
-		apply_surface( offSet, DEFAULT_Y, foo, screen, &clipsUpRight[ frame ] );
+	if (yvel > 0 ){
+		status = FOO_JUMP_RIGHT;
+		yoff -= yvel;
 		frame++;
 	}
-    }
- 
+	
+	else if ( velocity > 0 ){
+		status = FOO_RIGHT;
+		frame ++;
+	}
 
+	else if ( velocity < 0){
+		status = FOO_LEFT;
+		frame++;
+	}
+
+	else{
+		frame = 0;
+		yoff = DEFAULT_Y;
+	}
+
+	if (frame >= 5){
+		//status = FOO_RIGHT;
+		frame = 0;
+		yoff = DEFAULT_Y;
+	}
+
+	if (status == FOO_RIGHT){
+		apply_surface( offSet, yoff, foo, screen, &clipsRight[ frame ] );
+	}
+
+	if (status == FOO_LEFT){
+		apply_surface( offSet, yoff, foo, screen, &clipsLeft[ frame ] );
+	}
+
+	if (status == FOO_JUMP_RIGHT){
+		apply_surface( offSet, yoff, foo, screen, &clipsUpRight[ frame ] );
+	}
+	
 }
 
 Timer::Timer()
