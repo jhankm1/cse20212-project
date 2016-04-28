@@ -1,0 +1,42 @@
+##########  TIME LOG  ##########
+
+DEVELOPERS:
+James Ryan
+Michael Hillmer
+Megan O'Bryan
+
+================================
+I.) MEETINGS
+
+4 March - 1 hour
+21 March - 4 hours
+9 April - 2 hours
+16 April - 3 hours
+20 April - 3 hours
+24 April - 4 hours
+27 April - 10 hours
+
+(Plus many less formal meetings)
+
+================================
+II.) INDIVIDUAL LOGS AND FOCUS
+
+JAMES - 38 hours. Main focuses:
+Code framework, sprite movement 
+(especially the god-forsaken
+jumping), music (8-bit arrangement 
+and code implementation).
+
+MICHAEL - 35 hours. Main focuses:
+Collision detection, sprite sheet
+creation, sprite movement (he's 
+quite proud of the bullets), game 
+screens.
+
+MEGAN - 36 hours. Main focuses:
+Sprite creation (she's the artistic
+one), sprite sheet creation (still 
+the artistic one), collision 
+detection.
+
+################################

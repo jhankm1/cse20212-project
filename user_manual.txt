@@ -1,0 +1,93 @@
+##########    USER MANUAL    ##########
+
+DEVELOPERS:
+James Ryan
+Michael Hillmer
+Megan O'Bryan
+
+=======================================
+I.) INTRODUCTION
+
+Welcome to AIR FORCE SUPER AWESOME
+ADVENTURE GAME: THE QUEST FOR 
+TOTAL AIR SUPREMACY!!! We hope you
+enjoy the cutting-edge graphics and
+crystal clear audio our game has to
+offer! You'll feel like you're in 
+the pilot's seat as you fight off
+America's enemies with strength, 
+speed, and honor!
+
+=======================================
+II.) OBJECTIVE
+
+Your mission is to effectively reach
+your Flight Ready Room in order to 
+prepare for your TOP SECRET MISSION.
+However, the base has come under 
+attack! You must advance to the 
+other side of the tarmac while 
+evading the enemy if you wish to live
+to fight the enemy! Hurry up, Airman!
+We're counting on you!
+
+=======================================
+III.) CONTROLS
+
+Right Arrow (>): Speed up right
+Left Arrow (<): Speed up left
+Up Arrow (^): Jump
+9: Start/pause/restart music
+0: Stop music
+
+=======================================
+IV.) TECHNICAL NOTES
+
+LIBRARIES: 
+The SDL, SDL_image, SDL_mixer, and 
+SDL_ttf libraries are all required to
+compile and run this program. 
+
+FILES:
+The "game.h", "game.cpp", and 
+"main.cpp" files are all required 
+to compile and run this program. 
+
+HOW TO COMPILE/RUN:
+This program can automatically be 
+built and run with the required 
+libraries and files by using the
+the Makefile included. Just type 
+"make" to compile. After compiling, 
+the program can be run by typing 
+"./game" into the console. To remove 
+game files in order to make a clean 
+compile, simply type "make clean" 
+into the console.
+
+KNOWN BUGS:
+Jumping in-game can tend to be a bit
+glitchy. Jump height, animation, and 
+key response time may differ and/or
+have slight lag depending on player 
+positioning on the map, nearby objects,
+and whether or not the player is moving.
+
+Bullet detection can be somewhat 
+unpredictable, especially at the start 
+of a new level. Due to the bullets being
+constantly updated, a bullet may appear 
+immediately at the beginning of a new 
+level, instantly killing a player. 
+Instances of this have been reduced 
+significantly, but are not completely
+eliminated.
+
+A very thin blue background may still 
+exist around some of the sprites. The 
+blue backround was color-keyed to be 
+transparent, but apparently some pixels
+just want to show their true colors.
+
+########################################
+
