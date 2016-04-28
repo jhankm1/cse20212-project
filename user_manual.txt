@@ -50,8 +50,13 @@ compile and run this program.
 
 FILES:
 The "game.h", "game.cpp", and 
-"main.cpp" files are all required 
-to compile and run this program. 
+"main.cpp" code files are required 
+to compile and run this program.
+Other required files include 
+Airman.png, Boss.png, GameOver.bmp,
+airforce.png, bullet.png, 
+city_background.bmp, obstacles.png,
+winscreen.png, new_af_song.wav.
 
 HOW TO COMPILE/RUN:
 This program can automatically be 
